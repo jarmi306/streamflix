@@ -16,17 +16,19 @@ import {
   Loader2, 
   Pause, 
   RotateCcw, 
-  CheckCircle2 
+  CheckCircle2,
+  List,
+  User
 } from 'lucide-react';
 
-/** * STREAMFLIX PRO - ULTIMATE CONSOLIDATED VERSION
- * This file handles logic, styling, and rendering in one place.
+/** * STREAMFLIX PRO - CINEMATIC EXPANSION
+ * Expanded database and category-based layout.
  */
 
 // --- CONFIGURATION ---
 const apiKey = ""; 
 
-// --- MOVIE DATABASE ---
+// --- EXPANDED MOVIE DATABASE ---
 const MOVIE_DATABASE = [
   {
     id: "sintel",
@@ -35,16 +37,16 @@ const MOVIE_DATABASE = [
     rating: "98% Match",
     year: "2010",
     duration: "15m",
-    genre: ["Animation", "Fantasy", "Adventure"],
+    genre: ["Fantasy", "Adventure"],
     image: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=1200&q=80",
     thumb: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=800&q=80",
     streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-    category: ['trending', 'popular']
+    categories: ['originals', 'trending']
   },
   {
     id: "tears-of-steel",
     title: "Tears of Steel",
-    description: "In a future where robots have taken over, a group of scientists and soldiers attempt to restart a world-saving technology using a captured robot.",
+    description: "In a future where robots have taken over, a group of scientists and soldiers attempt to restart a world-saving technology.",
     rating: "94% Match",
     year: "2012",
     duration: "12m",
@@ -52,7 +54,7 @@ const MOVIE_DATABASE = [
     image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80",
     thumb: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=800&q=80",
     streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-    category: ['trending', 'scifi']
+    categories: ['action', 'scifi', 'trending']
   },
   {
     id: "big-buck-bunny",
@@ -65,7 +67,20 @@ const MOVIE_DATABASE = [
     image: "https://images.unsplash.com/photo-1585675100414-add2e465a136?auto=format&fit=crop&w=1200&q=80",
     thumb: "https://images.unsplash.com/photo-1585675100414-add2e465a136?auto=format&fit=crop&w=800&q=80",
     streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-    category: ['popular', 'animation']
+    categories: ['family', 'trending']
+  },
+  {
+    id: "cosmos-laundromat",
+    title: "Cosmos Laundromat",
+    description: "On a desolate island, a suicidal sheep named Franck meets a quirky salesman who offers him the gift of a lifetime.",
+    rating: "99% Match",
+    year: "2015",
+    duration: "13m",
+    genre: ["Surreal", "Sci-Fi"],
+    image: "https://images.unsplash.com/photo-1614728263952-84ea206f99b6?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1614728263952-84ea206f99b6?auto=format&fit=crop&w=800&q=80",
+    streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/CosmosLaundromat.mp4",
+    categories: ['originals', 'scifi']
   },
   {
     id: "elephants-dream",
@@ -78,7 +93,46 @@ const MOVIE_DATABASE = [
     image: "https://images.unsplash.com/photo-1535016120720-40c646bebbfc?auto=format&fit=crop&w=1200&q=80",
     thumb: "https://images.unsplash.com/photo-1535016120720-40c646bebbfc?auto=format&fit=crop&w=800&q=80",
     streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-    category: ['scifi', 'classic']
+    categories: ['scifi']
+  },
+  {
+    id: "caminandes-1",
+    title: "Caminandes: Llama Drama",
+    description: "In the rugged mountains of Patagonia, a brave llama named Koro encounters a strange barrier blocking his path.",
+    rating: "95% Match",
+    year: "2013",
+    duration: "2m",
+    genre: ["Animation", "Comedy"],
+    image: "https://images.unsplash.com/photo-1518112166137-85899ef05497?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1518112166137-85899ef05497?auto=format&fit=crop&w=800&q=80",
+    streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    categories: ['family', 'originals']
+  },
+  {
+    id: "caminandes-2",
+    title: "Caminandes: Llamigos",
+    description: "Koro the Llama is back, this time competing with a penguin for the last tasty snack in the Antarctic.",
+    rating: "93% Match",
+    year: "2016",
+    duration: "3m",
+    genre: ["Animation", "Comedy"],
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80",
+    streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    categories: ['family', 'trending']
+  },
+  {
+    id: "glass-half",
+    title: "Glass Half",
+    description: "A short comedy about subjectivity and how we see the world through different lenses.",
+    rating: "88% Match",
+    year: "2015",
+    duration: "3m",
+    genre: ["Animation", "Comedy"],
+    image: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=1200&q=80",
+    thumb: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80",
+    streamUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+    categories: ['family']
   }
 ];
 
@@ -98,11 +152,11 @@ const callGemini = async (prompt, systemInstruction = "") => {
     const data = await response.json();
     return data.candidates?.[0]?.content?.parts?.[0]?.text || "Enjoy the show!";
   } catch (e) {
-    return "The AI is currently off-script, but the cinema is still open!";
+    return "The cinema AI is currently off-script, but the movies are still running!";
   }
 };
 
-// --- COMPONENTS ---
+// --- SUB-COMPONENTS ---
 
 const CinematicPlayer = ({ movie, onClose }) => {
   const videoRef = useRef(null);
@@ -123,7 +177,7 @@ const CinematicPlayer = ({ movie, onClose }) => {
     <div className="fixed inset-0 z-[1000] bg-black flex items-center justify-center animate-fade-in">
       <div className="absolute top-0 w-full p-6 md:p-10 flex justify-between items-center z-50 bg-gradient-to-b from-black/90 to-transparent">
         <div className="flex items-center gap-4">
-          <button onClick={onClose} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-all active:scale-95">
+          <button onClick={onClose} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-all">
             <ChevronLeft className="w-8 h-8" />
           </button>
           <div className="space-y-1">
@@ -184,14 +238,16 @@ const MovieRow = ({ title, movies, onSelect, onPlay }) => {
     }
   };
 
+  if (movies.length === 0) return null;
+
   return (
     <div className="space-y-4 py-6 group/row">
-      <h2 className="text-2xl md:text-3xl font-black text-zinc-100 px-4 md:px-12 flex items-center gap-2 group-hover/row:translate-x-1 transition-transform cursor-pointer">
+      <h2 className="text-2xl md:text-3xl font-black text-zinc-100 px-6 md:px-12 flex items-center gap-2 group-hover/row:translate-x-1 transition-transform cursor-pointer">
         {title} <ChevronRight className="w-6 h-6 text-red-600 opacity-0 group-hover/row:opacity-100 transition-opacity" />
       </h2>
       <div className="relative">
         <button onClick={() => scroll('left')} className="absolute left-0 top-0 bottom-0 z-40 w-12 bg-black/60 opacity-0 group-hover/row:opacity-100 transition-all flex items-center justify-center text-white"><ChevronLeft className="w-10 h-10" /></button>
-        <div ref={rowRef} className="flex gap-4 overflow-x-auto scrollbar-hide px-4 md:px-12 py-4">
+        <div ref={rowRef} className="flex gap-4 overflow-x-auto scrollbar-hide px-6 md:px-12 py-4">
           {movies.map(movie => (
             <div 
               key={movie.id}
@@ -232,8 +288,8 @@ const MovieModal = ({ movie, onClose, onPlay }) => {
     const fetchAI = async () => {
       setLoading(true);
       const res = await callGemini(
-        `Why is "${movie.title}" a cinematic masterpiece? Focus on its legacy and visual tone.`,
-        "You are an expert Hollywood film critic. Respond in two exciting, punchy sentences."
+        `Describe the cinematic tone and visual legacy of "${movie.title}".`,
+        "You are an expert Hollywood film critic. Respond in two punchy, exciting sentences."
       );
       setInsight(res);
       setLoading(false);
@@ -281,7 +337,7 @@ const MovieModal = ({ movie, onClose, onPlay }) => {
               {loading ? (
                 <div className="flex items-center gap-3 text-zinc-600 animate-pulse">
                   <Loader2 className="animate-spin w-5 h-5" /> 
-                  Analysing script...
+                  Analysing directorial style...
                 </div>
               ) : (
                 <p className="text-zinc-300 text-lg italic leading-relaxed font-serif">"{insight}"</p>
@@ -316,7 +372,7 @@ const App = () => {
     setAiFilter(null);
     try {
       const inventory = MOVIE_DATABASE.map(m => ({ id: m.id, title: m.title, desc: m.description }));
-      const prompt = `Based on these movies: ${JSON.stringify(inventory)}, which match the user's request: "${query}"? Return ONLY a JSON array of IDs.`;
+      const prompt = `Based on these movies: ${JSON.stringify(inventory)}, which match the user's vibe: "${query}"? Return ONLY a JSON array of IDs.`;
       const res = await callGemini(prompt, "You are a movie concierge. Return ONLY a JSON array.");
       const cleaned = res.replace(/```json|```/g, '').trim();
       const ids = JSON.parse(cleaned);
@@ -337,38 +393,34 @@ const App = () => {
   return (
     <div className="min-h-screen bg-zinc-950 text-white font-sans selection:bg-red-600/50">
       <style>{`
-        /* FALLBACK STYLES FOR THE LIVE SITE */
-        body { 
-          background-color: #09090b !important; 
-          margin: 0; 
-          font-family: 'Inter', -apple-system, sans-serif; 
-          color: white;
-        }
+        body { background-color: #09090b !important; margin: 0; font-family: 'Inter', -apple-system, sans-serif; color: white; }
         #root { min-height: 100vh; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
         @keyframes zoom-in { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
         .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
         .animate-zoom-in { animation: zoom-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
       `}</style>
 
       {/* NAVBAR */}
       <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-6 md:px-12 py-5 flex items-center justify-between ${isScrolled ? 'bg-zinc-950 shadow-2xl border-b border-white/5' : 'bg-gradient-to-b from-black/80 to-transparent'}`}>
         <div className="flex items-center gap-12">
-          <h1 className="text-red-600 text-3xl md:text-4xl font-black tracking-tighter uppercase cursor-pointer select-none transition-transform active:scale-95">StreamFlix</h1>
+          <h1 className="text-red-600 text-3xl md:text-4xl font-black tracking-tighter uppercase cursor-pointer transition-transform active:scale-95">StreamFlix</h1>
+          <ul className="hidden lg:flex items-center gap-8 text-xs font-black text-zinc-400 tracking-[0.2em] uppercase">
+            <li className="text-white cursor-pointer">Home</li>
+            <li className="hover:text-white cursor-pointer transition-colors">TV Shows</li>
+            <li className="hover:text-white cursor-pointer transition-colors">Movies</li>
+            <li className="hover:text-white cursor-pointer transition-colors">My List</li>
+          </ul>
         </div>
         
         <div className="flex items-center gap-8">
           <div className="hidden sm:flex items-center bg-black/40 border border-zinc-800 rounded-full px-5 py-2 focus-within:border-zinc-500 focus-within:bg-black/60 transition-all w-64 md:w-[400px] group shadow-inner">
-            <Search className="w-4 h-4 text-zinc-500 group-focus-within:text-white transition-colors" />
+            <Search className="w-4 h-4 text-zinc-500" />
             <input 
               className="bg-transparent border-none outline-none text-sm w-full ml-3 text-white placeholder-zinc-600"
-              placeholder="Search or ask the AI..."
+              placeholder="Search or describe a vibe..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleMagicSearch(searchQuery)}
@@ -376,16 +428,18 @@ const App = () => {
             {searchQuery.length > 2 && (
               <button 
                 onClick={() => handleMagicSearch(searchQuery)}
-                disabled={isMagicSearching}
-                className="bg-red-600 hover:bg-red-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50 ml-2"
+                className="bg-red-600 hover:bg-red-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 ml-2"
               >
                 {isMagicSearching ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
                 Mood
               </button>
             )}
           </div>
-          <div className="w-10 h-10 rounded-lg bg-indigo-600 overflow-hidden shadow-xl ring-2 ring-transparent hover:ring-white transition-all cursor-pointer">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" />
+          <div className="flex items-center gap-6">
+            <Bell className="w-5 h-5 text-zinc-400 hover:text-white cursor-pointer" />
+            <div className="w-10 h-10 rounded-lg bg-indigo-600 overflow-hidden shadow-xl ring-2 ring-transparent hover:ring-white transition-all cursor-pointer">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" />
+            </div>
           </div>
         </div>
       </nav>
@@ -394,26 +448,33 @@ const App = () => {
         {(!searchQuery && !aiFilter) ? (
           <>
             <div className="relative h-[90vh] w-full overflow-hidden">
-              <img src={MOVIE_DATABASE[0].image} className="w-full h-full object-cover brightness-[0.35] transition-transform duration-[20s] hover:scale-110" alt="hero" />
+              <img src={MOVIE_DATABASE[0].image} className="w-full h-full object-cover brightness-[0.35]" alt="hero" />
               <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/20 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
-              <div className="absolute bottom-[20%] left-6 md:left-12 max-w-3xl space-y-8 animate-slide-up">
+              <div className="absolute bottom-[20%] left-6 md:left-12 max-w-3xl space-y-8 animate-in slide-up">
+                <div className="flex items-center gap-3">
+                   <div className="bg-red-600 text-[10px] font-black px-2 py-1 rounded text-white tracking-[0.2em] uppercase shadow-lg">Original Series</div>
+                   <div className="text-white text-xs font-black uppercase tracking-widest opacity-60">Season 1 Now Streaming</div>
+                </div>
                 <h2 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase italic">{MOVIE_DATABASE[0].title}</h2>
                 <p className="text-zinc-300 text-xl md:text-2xl font-medium line-clamp-3 leading-relaxed max-w-2xl">{MOVIE_DATABASE[0].description}</p>
                 <div className="flex gap-6">
-                  <button 
-                    onClick={() => setActiveStream(MOVIE_DATABASE[0])}
-                    className="flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-2xl"
-                  >
+                  <button onClick={() => setActiveStream(MOVIE_DATABASE[0])} className="flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-2xl">
                     <Play fill="currentColor" size={24} /> Play Now
+                  </button>
+                  <button onClick={() => setSelectedMovie(MOVIE_DATABASE[0])} className="flex items-center gap-4 bg-zinc-800/40 text-white px-12 py-5 rounded-2xl font-black backdrop-blur-2xl border border-white/10 hover:bg-zinc-800/60 transition-all active:scale-95">
+                    <Info size={24} /> More Info
                   </button>
                 </div>
               </div>
             </div>
 
             <div className="relative -mt-48 z-10 space-y-16">
-              <MovieRow title="Trending Now" movies={MOVIE_DATABASE} onSelect={setSelectedMovie} onPlay={setActiveStream} />
-              <MovieRow title="Visionary Sci-Fi" movies={MOVIE_DATABASE.filter(m => m.genre.includes('Sci-Fi'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
+              <MovieRow title="StreamFlix Originals" movies={MOVIE_DATABASE.filter(m => m.categories.includes('originals'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
+              <MovieRow title="Trending Now" movies={MOVIE_DATABASE.filter(m => m.categories.includes('trending'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
+              <MovieRow title="Warp into Sci-Fi" movies={MOVIE_DATABASE.filter(m => m.categories.includes('scifi'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
+              <MovieRow title="Explosive Action" movies={MOVIE_DATABASE.filter(m => m.categories.includes('action'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
+              <MovieRow title="Family Favorites" movies={MOVIE_DATABASE.filter(m => m.categories.includes('family'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
             </div>
           </>
         ) : (
@@ -425,7 +486,6 @@ const App = () => {
                </div>
                <button onClick={() => {setAiFilter(null); setSearchQuery("");}} className="text-zinc-500 hover:text-white font-black text-xs uppercase tracking-widest transition-colors">Reset</button>
              </div>
-             
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
                 {filteredMovies.map(m => (
                   <div key={m.id} className="group cursor-pointer space-y-4" onClick={() => setSelectedMovie(m)}>
@@ -440,21 +500,26 @@ const App = () => {
         )}
       </main>
 
+      <footer className="px-6 md:px-12 py-32 bg-zinc-950 border-t border-zinc-900 text-zinc-600 text-sm">
+         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-16 font-bold uppercase tracking-widest text-[10px]">
+           <ul className="space-y-5"><li>Audio Description</li><li>Investor Relations</li><li>Privacy</li><li>Legal Notices</li></ul>
+           <ul className="space-y-5"><li>Help Center</li><li>Jobs</li><li>Cookie Preferences</li><li>Corporate Information</li></ul>
+           <ul className="space-y-5"><li>Gift Cards</li><li>Terms of Use</li><li>Service Code</li><li>Media Center</li></ul>
+           <ul className="space-y-5"><li>StreamFlix Shop</li><li>Contact Us</li><li>© 2025 StreamFlix Cinema</li></ul>
+         </div>
+      </footer>
+
       {selectedMovie && <MovieModal movie={selectedMovie} onClose={() => setSelectedMovie(null)} onPlay={setActiveStream} />}
       {activeStream && <CinematicPlayer movie={activeStream} onClose={() => setActiveStream(null)} />}
     </div>
   );
 };
 
-// --- MOUNT THE APP TO THE DOM ---
+// --- MOUNT THE APP ---
 const rootElement = document.getElementById('root');
 if (rootElement) {
   const root = createRoot(rootElement);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
+  root.render(<React.StrictMode><App /></React.StrictMode>);
 }
 
 export default App;
