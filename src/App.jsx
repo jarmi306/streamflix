@@ -1,4 +1,4 @@
-imimport React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { 
   Play, 
   Info, 
@@ -130,7 +130,7 @@ const CinematicPlayer = ({ movie, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[1000] bg-black flex items-center justify-center animate-in fade-in duration-500">
+    <div className="fixed inset-0 z-[1000] bg-black flex items-center justify-center">
       <div className="absolute top-0 w-full p-6 md:p-10 flex justify-between items-center z-50 bg-gradient-to-b from-black/90 to-transparent">
         <div className="flex items-center gap-4">
           <button onClick={onClose} className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-all">
@@ -178,12 +178,6 @@ const CinematicPlayer = ({ movie, onClose }) => {
               <RotateCcw className="w-7 h-7" />
             </button>
             <Volume2 className="w-7 h-7 opacity-60 hover:opacity-100 cursor-pointer" />
-          </div>
-          <div className="hidden md:block text-zinc-400 font-mono text-sm">
-            {videoRef.current ? Math.floor(videoRef.current.currentTime / 60) : 0}:
-            {videoRef.current ? String(Math.floor(videoRef.current.currentTime % 60)).padStart(2, '0') : '00'} / 
-            {videoRef.current ? Math.floor(videoRef.current.duration / 60) : 0}:
-            {videoRef.current ? String(Math.floor(videoRef.current.duration % 60)).padStart(2, '0') : '00'}
           </div>
         </div>
       </div>
@@ -261,7 +255,7 @@ const MovieModal = ({ movie, onClose, onPlay }) => {
   if (!movie) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-8 animate-in fade-in zoom-in duration-300">
+    <div className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-8">
       <div className="bg-zinc-900 w-full max-w-6xl rounded-3xl overflow-hidden shadow-2xl relative border border-white/10 max-h-[95vh] overflow-y-auto scrollbar-hide">
         <button onClick={onClose} className="absolute top-6 right-6 z-50 p-2 bg-black/60 rounded-full text-white hover:bg-zinc-800 transition-all"><X /></button>
         
@@ -277,7 +271,6 @@ const MovieModal = ({ movie, onClose, onPlay }) => {
               >
                 <Play fill="currentColor" className="w-7 h-7" /> Play Now
               </button>
-              <button className="p-5 border-2 border-zinc-600 rounded-full text-white hover:bg-white/10 transition-colors"><Plus /></button>
             </div>
           </div>
         </div>
@@ -306,28 +299,11 @@ const MovieModal = ({ movie, onClose, onPlay }) => {
               )}
             </div>
           </div>
-
-          <div className="space-y-10 border-l border-zinc-800 pl-10 hidden md:block">
-            <div className="space-y-2">
-              <span className="text-zinc-600 text-[10px] font-black uppercase tracking-[0.2em]">Stream Status</span>
-              <div className="flex items-center gap-3 text-white font-bold text-lg"><CheckCircle2 className="text-green-500 w-6 h-6" /> Verified High Quality</div>
-            </div>
-            <div className="space-y-2">
-              <span className="text-zinc-600 text-[10px] font-black uppercase tracking-[0.2em]">Genre Spectrum</span>
-              <div className="text-zinc-100 font-bold text-lg">{movie.genre.join(' / ')}</div>
-            </div>
-            <div className="space-y-2">
-              <span className="text-zinc-600 text-[10px] font-black uppercase tracking-[0.2em]">Cinematic Rating</span>
-              <div className="flex items-center gap-1 text-yellow-500 font-bold text-2xl">★★★★★</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   );
 };
-
-// --- APP ---
 
 export default function App() {
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -368,21 +344,15 @@ export default function App() {
   }, [searchQuery, aiFilter]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans selection:bg-red-600/50">
+    <div className="min-h-screen bg-zinc-950 text-white font-sans">
       <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-6 md:px-12 py-5 flex items-center justify-between ${isScrolled ? 'bg-zinc-950 shadow-2xl border-b border-white/5' : 'bg-gradient-to-b from-black/80 to-transparent'}`}>
         <div className="flex items-center gap-12">
           <h1 className="text-red-600 text-3xl md:text-4xl font-black tracking-tighter uppercase cursor-pointer select-none">StreamFlix</h1>
-          <ul className="hidden lg:flex items-center gap-8 text-sm font-black text-zinc-400 tracking-wider">
-            <li className="text-white">Home</li>
-            <li className="hover:text-white cursor-pointer transition-colors">Movies</li>
-            <li className="hover:text-white cursor-pointer transition-colors">New</li>
-            <li className="hover:text-white cursor-pointer transition-colors">List</li>
-          </ul>
         </div>
         
         <div className="flex items-center gap-8">
           <div className="hidden sm:flex items-center bg-black/40 border border-zinc-800 rounded-full px-5 py-2.5 focus-within:border-zinc-500 transition-all w-64 md:w-[450px] group shadow-inner">
-            <Search className="w-4 h-4 text-zinc-500 group-focus-within:text-white transition-colors" />
+            <Search className="w-4 h-4 text-zinc-500" />
             <input 
               className="bg-transparent border-none outline-none text-sm w-full ml-3"
               placeholder="Search or describe a vibe..."
@@ -400,7 +370,7 @@ export default function App() {
               </button>
             )}
           </div>
-          <div className="w-10 h-10 rounded-lg bg-indigo-600 ring-2 ring-transparent hover:ring-white transition-all cursor-pointer shadow-xl overflow-hidden">
+          <div className="w-10 h-10 rounded-lg bg-indigo-600 overflow-hidden shadow-xl">
             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Max" alt="avatar" />
           </div>
         </div>
@@ -410,14 +380,10 @@ export default function App() {
         {(!searchQuery && !aiFilter) ? (
           <>
             <div className="relative h-[90vh] w-full overflow-hidden">
-              <img src={MOVIE_DATABASE[0].image} className="w-full h-full object-cover brightness-[0.3] transition-transform duration-[20s] hover:scale-110" alt="hero" />
+              <img src={MOVIE_DATABASE[0].image} className="w-full h-full object-cover brightness-[0.3]" alt="hero" />
               <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/20 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent" />
-              <div className="absolute bottom-[20%] left-6 md:left-12 max-w-3xl space-y-8 animate-in slide-in-from-left duration-700">
-                <div className="flex items-center gap-3">
-                   <div className="bg-red-600 text-[10px] font-black px-2 py-1 rounded text-white tracking-[0.2em] uppercase shadow-lg">Original Series</div>
-                   <div className="text-white text-xs font-black uppercase tracking-widest opacity-60">Season 1 Now Streaming</div>
-                </div>
+              <div className="absolute bottom-[20%] left-6 md:left-12 max-w-3xl space-y-8">
                 <h2 className="text-7xl md:text-9xl font-black tracking-tighter leading-[0.85]">{MOVIE_DATABASE[0].title}</h2>
                 <p className="text-zinc-300 text-xl md:text-2xl font-medium line-clamp-3 leading-relaxed max-w-2xl">{MOVIE_DATABASE[0].description}</p>
                 <div className="flex gap-6">
@@ -429,7 +395,7 @@ export default function App() {
                   </button>
                   <button 
                     onClick={() => setSelectedMovie(MOVIE_DATABASE[0])}
-                    className="flex items-center gap-4 bg-zinc-400/20 text-white px-12 py-5 rounded-2xl font-black backdrop-blur-2xl border border-white/10 hover:bg-zinc-400/30 transition-all"
+                    className="flex items-center gap-4 bg-zinc-400/20 text-white px-12 py-5 rounded-2xl font-black backdrop-blur-2xl border border-white/10"
                   >
                     <Info size={24} /> More Info
                   </button>
@@ -438,9 +404,7 @@ export default function App() {
             </div>
 
             <div className="relative -mt-40 z-10 space-y-16">
-              <MovieRow title="Trending Across StreamFlix" movies={MOVIE_DATABASE.filter(m => m.category.includes('trending'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
-              <MovieRow title="Top Rated Masterpieces" movies={MOVIE_DATABASE.filter(m => m.category.includes('popular'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
-              <MovieRow title="Visionary Sci-Fi" movies={MOVIE_DATABASE.filter(m => m.category.includes('scifi'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
+              <MovieRow title="Trending Across StreamFlix" movies={MOVIE_DATABASE} onSelect={setSelectedMovie} onPlay={setActiveStream} />
             </div>
           </>
         ) : (
@@ -455,46 +419,27 @@ export default function App() {
                {aiFilter && <button onClick={() => setAiFilter(null)} className="text-red-500 font-black text-sm uppercase tracking-widest border-b-2 border-red-500/20 hover:border-red-500 transition-all pb-1">Reset Search</button>}
              </div>
              
-             {filteredMovies.length > 0 ? (
-               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
-                  {filteredMovies.map(m => (
-                    <div key={m.id} className="group cursor-pointer space-y-4" onClick={() => setSelectedMovie(m)}>
-                      <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/5 shadow-2xl transition-all duration-500 group-hover:scale-105 group-hover:ring-4 ring-red-600/30">
-                        <img src={m.thumb} className="w-full h-full object-cover" alt={m.title} />
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
-                          <div className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                            <Play fill="currentColor" size={28} />
-                          </div>
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
+                {filteredMovies.map(m => (
+                  <div key={m.id} className="group cursor-pointer space-y-4" onClick={() => setSelectedMovie(m)}>
+                    <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/5 shadow-2xl transition-all duration-500 group-hover:scale-105">
+                      <img src={m.thumb} className="w-full h-full object-cover" alt={m.title} />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
+                        <div className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                          <Play fill="currentColor" size={28} />
                         </div>
                       </div>
-                      <div className="space-y-1">
-                        <h4 className="text-white font-black text-xl tracking-tight">{m.title}</h4>
-                        <p className="text-zinc-500 text-sm font-medium">{m.year} • {m.genre[0]}</p>
-                      </div>
                     </div>
-                  ))}
-               </div>
-             ) : (
-                <div className="flex flex-col items-center justify-center py-40 text-center space-y-6">
-                  <AlertCircle className="w-20 h-20 text-zinc-800" />
-                  <div className="space-y-2">
-                    <h3 className="text-3xl font-black text-zinc-400 uppercase tracking-tighter">No Cinematic Matches</h3>
-                    <p className="text-zinc-600 max-w-md">The AI couldn't find a vibe match for your request. Try describing a genre, mood, or setting.</p>
+                    <div className="space-y-1">
+                      <h4 className="text-white font-black text-xl tracking-tight">{m.title}</h4>
+                      <p className="text-zinc-500 text-sm font-medium">{m.year} • {m.genre[0]}</p>
+                    </div>
                   </div>
-                </div>
-             )}
+                ))}
+             </div>
           </div>
         )}
       </main>
-
-      <footer className="px-6 md:px-12 py-32 bg-zinc-950 border-t border-zinc-900 text-zinc-600 text-sm">
-         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-16 font-bold uppercase tracking-widest text-[10px]">
-           <ul className="space-y-5 hover:text-zinc-400 transition-colors"><li>Audio Description</li><li>Investor Relations</li><li>Privacy Policy</li><li>Legal Notices</li></ul>
-           <ul className="space-y-5 hover:text-zinc-400 transition-colors"><li>Help Center</li><li>Jobs</li><li>Cookie Preferences</li><li>Corporate Information</li></ul>
-           <ul className="space-y-5 hover:text-zinc-400 transition-colors"><li>Gift Cards</li><li>Terms of Use</li><li>Service Code</li><li>Media Center</li></ul>
-           <ul className="space-y-5 hover:text-zinc-400 transition-colors"><li>StreamFlix Shop</li><li>Contact Us</li><li>© 2025 StreamFlix Cinema</li></ul>
-         </div>
-      </footer>
 
       {selectedMovie && <MovieModal movie={selectedMovie} onClose={() => setSelectedMovie(null)} onPlay={setActiveStream} />}
       {activeStream && <CinematicPlayer movie={activeStream} onClose={() => setActiveStream(null)} />}
@@ -502,12 +447,7 @@ export default function App() {
       <style>{`
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes zoom-in { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .animate-in { animation: var(--duration, 300ms) ease-out forwards; }
-        .fade-in { animation-name: fade-in; }
-        .zoom-in { animation-name: zoom-in; }
       `}</style>
     </div>
   );
-}port { useState } from 'react'
+}
