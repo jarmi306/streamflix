@@ -17,10 +17,8 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
-/** * SECTION 1: THE KDRAMA DATABASE (EDIT THIS SECTION ONLY)
- * Add or edit your shows here. 
- * 'poster' = Vertical image (for Originals)
- * 'backdrop' = Horizontal image (for Rows)
+/** * SECTION 1: THE KDRAMA DATABASE
+ * Edit this section to add or update your shows.
  */
 const MOVIE_DATABASE = [
   {
@@ -116,7 +114,10 @@ const MOVIE_DATABASE = [
   }
 ];
 
-// --- SECTION 2: THE ENGINE (NO NEED TO EDIT BELOW THIS LINE) ---
+/**
+ * SECTION 2: THE ENGINE
+ * Core application logic and cinematic components.
+ */
 
 const apiKey = ""; 
 
@@ -129,11 +130,11 @@ const callGemini = async (prompt, systemInstruction = "") => {
   try {
     const response = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     const data = await response.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Enjoy the cinematic experience!";
-  } catch (e) { return "AI concierge is busy, but the show must go on!"; }
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Enjoy this cinematic experience!";
+  } catch (e) { return "AI concierge is resting. Enjoy the drama!"; }
 };
 
-const VideoPlayer = ({ movie, onClose }) => {
+const CinematicPlayer = ({ movie, onClose }) => {
   const videoRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -152,15 +153,25 @@ const VideoPlayer = ({ movie, onClose }) => {
         <h2 className="text-white text-lg font-black uppercase tracking-widest">{movie.title}</h2>
         <button onClick={onClose} className="text-white opacity-60 hover:opacity-100 transition-opacity"><X className="w-8 h-8" /></button>
       </div>
-      <video ref={videoRef} autoPlay className="w-full h-full object-contain cursor-pointer" onTimeUpdate={() => setProgress((videoRef.current.currentTime / videoRef.current.duration) * 100)} onClick={togglePlay} onEnded={onClose}>
+      <video 
+        ref={videoRef} 
+        autoPlay 
+        className="w-full h-full object-contain cursor-pointer" 
+        onTimeUpdate={() => setProgress((videoRef.current.currentTime / videoRef.current.duration) * 100)} 
+        onClick={togglePlay} 
+        onEnded={onClose}
+      >
         <source src={movie.streamUrl} type="video/mp4" />
       </video>
       <div className="absolute bottom-0 w-full p-6 md:p-12 bg-gradient-to-t from-black/90 to-transparent space-y-6">
-        <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden cursor-pointer group" onClick={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect();
-          const pos = (e.clientX - rect.left) / rect.width;
-          videoRef.current.currentTime = pos * videoRef.current.duration;
-        }}>
+        <div 
+          className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden cursor-pointer group" 
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            videoRef.current.currentTime = pos * videoRef.current.duration;
+          }}
+        >
           <div className="bg-red-600 h-full group-hover:bg-red-500 transition-all duration-150" style={{ width: `${progress}%` }} />
         </div>
         <div className="flex items-center gap-8 text-white">
@@ -184,7 +195,7 @@ const MovieRow = ({ title, movies, onSelect, onPlay, isOriginals = false }) => {
       </h2>
       <div className="relative">
         <button onClick={() => scroll('left')} className="absolute left-0 top-0 bottom-0 z-40 w-12 bg-black/60 opacity-0 group-hover/row:opacity-100 transition-all flex items-center justify-center text-white"><ChevronLeft size={32} /></button>
-        <div ref={rowRef} className="flex gap-4 overflow-x-auto scrollbar-hide px-6 md:px-12 py-4">
+        <div ref={rowRef} className="flex gap-3 overflow-x-auto scrollbar-hide px-6 md:px-12 py-4">
           {movies.map(movie => (
             <div 
               key={movie.id} 
@@ -194,8 +205,8 @@ const MovieRow = ({ title, movies, onSelect, onPlay, isOriginals = false }) => {
               <img src={isOriginals ? movie.poster : movie.backdrop} className="w-full h-full object-cover group-hover:brightness-50 transition-all duration-500" alt={movie.title} />
               <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all p-4 flex flex-col justify-end">
                 <div className="flex gap-2 mb-2">
-                   <div onClick={(e) => { e.stopPropagation(); onPlay(movie); }} className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black hover:bg-zinc-200 shadow-xl transition-all"><Play fill="currentColor" size={14} /></div>
-                   <div className="w-8 h-8 rounded-full border border-zinc-500 flex items-center justify-center text-white hover:bg-white/10 transition-all"><Plus size={14} /></div>
+                   <div onClick={(e) => { e.stopPropagation(); onPlay(movie); }} className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black hover:bg-zinc-200"><Play fill="currentColor" size={14} /></div>
+                   <div className="w-8 h-8 rounded-full border border-zinc-500 flex items-center justify-center text-white hover:bg-white/10"><Plus size={14} /></div>
                 </div>
                 <h3 className="text-white font-black text-[10px] uppercase tracking-wider truncate">{movie.title}</h3>
                 <span className="text-green-500 font-bold text-[10px]">{movie.rating}</span>
@@ -217,7 +228,7 @@ const MovieDetailsModal = ({ movie, onClose, onPlay }) => {
     if (!movie) return;
     const fetchAI = async () => {
       setLoading(true);
-      const res = await callGemini(`Describe why "${movie.title}" is a must-watch KDrama.`, "Expert critic. Two punchy sentences.");
+      const res = await callGemini(`Describe why "${movie.title}" is a must-watch KDrama masterpiece.`, "Expert critic. Two punchy sentences.");
       setInsight(res);
       setLoading(false);
     };
@@ -236,7 +247,7 @@ const MovieDetailsModal = ({ movie, onClose, onPlay }) => {
           <div className="absolute bottom-10 left-10 space-y-6 max-w-2xl">
             <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter uppercase italic">{movie.title}</h2>
             <div className="flex gap-4">
-              <button onClick={() => onPlay(movie)} className="flex items-center gap-3 bg-white text-black px-10 py-3 rounded-xl font-black hover:bg-zinc-200 shadow-xl transition-all active:scale-95"><Play fill="currentColor" /> Play</button>
+              <button onClick={() => onPlay(movie)} className="flex items-center gap-3 bg-white text-black px-10 py-3 rounded-xl font-black hover:bg-zinc-200 shadow-xl active:scale-95"><Play fill="currentColor" /> Play</button>
             </div>
           </div>
         </div>
@@ -244,7 +255,7 @@ const MovieDetailsModal = ({ movie, onClose, onPlay }) => {
           <div className="flex items-center gap-6 text-zinc-400 font-black text-xs tracking-widest">
             <span className="text-green-500">{movie.rating}</span>
             <span>{movie.year}</span>
-            <span className="border border-zinc-700 px-2 rounded">4K UHD</span>
+            <span className="border border-zinc-700 px-2 rounded">HD 1080p</span>
             <span>{movie.duration}</span>
           </div>
           <p className="text-lg md:text-xl text-zinc-200 leading-relaxed font-medium">{movie.description}</p>
@@ -278,6 +289,7 @@ export default function App() {
     <div className="min-h-screen bg-zinc-950 text-white font-sans selection:bg-red-600/50">
       <style>{`
         body { background-color: #09090b !important; margin: 0; font-family: 'Inter', sans-serif; color: white; }
+        #root { min-height: 100vh; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -286,20 +298,26 @@ export default function App() {
         .animate-zoom-in { animation: zoom-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
 
+      {/* NAVBAR */}
       <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-6 md:px-12 py-5 flex items-center justify-between ${isScrolled ? 'bg-zinc-950 shadow-2xl border-b border-white/5' : 'bg-gradient-to-b from-black/80 to-transparent'}`}>
         <div className="flex items-center gap-12">
-          <h1 className="text-red-600 text-3xl md:text-4xl font-black tracking-tighter uppercase cursor-pointer select-none transition-transform active:scale-95">StreamFlix K</h1>
+          <h1 className="text-red-600 text-3xl md:text-4xl font-black tracking-tighter uppercase cursor-pointer transition-transform active:scale-95">StreamFlix K</h1>
           <ul className="hidden lg:flex items-center gap-8 text-[10px] font-black text-zinc-400 tracking-[0.2em] uppercase">
-            <li className="text-white">Home</li>
+            <li className="text-white cursor-pointer">Home</li>
             <li className="hover:text-white cursor-pointer transition-colors">KDramas</li>
             <li className="hover:text-white cursor-pointer transition-colors">Movies</li>
-            <li className="hover:text-white cursor-pointer transition-colors">Trending</li>
           </ul>
         </div>
+        
         <div className="flex items-center gap-8">
-          <div className="hidden sm:flex items-center bg-black/40 border border-zinc-800 rounded-full px-5 py-2 w-64 md:w-[350px] group">
+          <div className="hidden sm:flex items-center bg-black/40 border border-zinc-800 rounded-full px-5 py-2 focus-within:border-zinc-500 transition-all w-64 md:w-[350px] group">
             <Search className="w-4 h-4 text-zinc-500 group-focus-within:text-white transition-colors" />
-            <input className="bg-transparent border-none outline-none text-sm w-full ml-3 text-white placeholder-zinc-600" placeholder="Search dramas..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+            <input 
+              className="bg-transparent border-none outline-none text-sm w-full ml-3 text-white placeholder-zinc-600"
+              placeholder="Search dramas..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
           <div className="w-10 h-10 rounded-lg bg-indigo-600 overflow-hidden shadow-xl ring-2 ring-transparent hover:ring-white transition-all cursor-pointer">
             <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" />
@@ -310,6 +328,7 @@ export default function App() {
       <main className="pb-32">
         {!searchQuery ? (
           <>
+            {/* HERO SECTION */}
             <div className="relative h-[90vh] w-full overflow-hidden">
               <img src={MOVIE_DATABASE[0].backdrop} className="w-full h-full object-cover brightness-[0.4] transition-transform duration-[20s] hover:scale-110" alt="hero" />
               <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/20 to-transparent" />
@@ -317,14 +336,19 @@ export default function App() {
               <div className="absolute bottom-[20%] left-6 md:left-12 max-w-3xl space-y-6 animate-fade-in">
                 <div className="bg-red-600 text-[9px] font-black px-2 py-1 rounded text-white tracking-[0.2em] uppercase shadow-lg w-fit">Top 1 in Korea Today</div>
                 <h2 className="text-6xl md:text-9xl font-black tracking-tighter leading-none uppercase italic">{MOVIE_DATABASE[0].title}</h2>
-                <p className="text-zinc-300 text-lg md:text-xl font-medium line-clamp-3 leading-relaxed max-w-2xl">{MOVIE_DATABASE[0].description}</p>
+                <p className="text-zinc-300 text-lg md:text-xl line-clamp-3 leading-relaxed max-w-2xl">{MOVIE_DATABASE[0].description}</p>
                 <div className="flex gap-4 pt-4">
-                  <button onClick={() => setActiveStream(MOVIE_DATABASE[0])} className="flex items-center gap-3 bg-white text-black px-12 py-3 rounded-md font-black hover:bg-zinc-200 transition-all shadow-2xl active:scale-95"><Play fill="currentColor" /> Play</button>
-                  <button onClick={() => setSelectedMovie(MOVIE_DATABASE[0])} className="flex items-center gap-3 bg-zinc-800/60 text-white px-12 py-3 rounded-md font-black backdrop-blur-md border border-white/10 hover:bg-zinc-800/80 transition-all active:scale-95"><Info /> More Info</button>
+                  <button onClick={() => setActiveStream(MOVIE_DATABASE[0])} className="flex items-center gap-3 bg-white text-black px-12 py-3 rounded-md font-black hover:bg-zinc-200 transition-all shadow-2xl active:scale-95">
+                    <Play fill="currentColor" /> Play Now
+                  </button>
+                  <button onClick={() => setSelectedMovie(MOVIE_DATABASE[0])} className="flex items-center gap-3 bg-zinc-800/60 text-white px-12 py-3 rounded-md font-black backdrop-blur-md border border-white/10 hover:bg-zinc-800/80 transition-all active:scale-95">
+                    <Info /> More Info
+                  </button>
                 </div>
               </div>
             </div>
 
+            {/* CONTENT ROWS */}
             <div className="relative -mt-32 z-10 space-y-12">
               <MovieRow title="Netflix Original Dramas" movies={MOVIE_DATABASE.filter(m => m.categories.includes('originals'))} onSelect={setSelectedMovie} onPlay={setActiveStream} isOriginals={true} />
               <MovieRow title="Trending Across Korea" movies={MOVIE_DATABASE.filter(m => m.categories.includes('trending'))} onSelect={setSelectedMovie} onPlay={setActiveStream} />
@@ -333,6 +357,7 @@ export default function App() {
             </div>
           </>
         ) : (
+          /* SEARCH RESULTS */
           <div className="pt-32 px-6 md:px-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 animate-fade-in">
              {filteredMovies.map(m => (
                <div key={m.id} className="group cursor-pointer space-y-2" onClick={() => setSelectedMovie(m)}>
@@ -347,7 +372,7 @@ export default function App() {
       </main>
 
       {selectedMovie && <MovieDetailsModal movie={selectedMovie} onClose={() => setSelectedMovie(null)} onPlay={setActiveStream} />}
-      {activeStream && <VideoPlayer movie={activeStream} onClose={() => setActiveStream(null)} />}
+      {activeStream && <CinematicPlayer movie={activeStream} onClose={() => setActiveStream(null)} />}
     </div>
   );
 }
