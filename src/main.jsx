@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { createRoot } from 'react-dom/client';
 import { 
   Play, 
   Info, 
@@ -18,9 +19,8 @@ import {
   CheckCircle2 
 } from 'lucide-react';
 
-/** * SINGLE-FILE CONSOLIDATION:
- * All logic, components, and styling are contained here to ensure 
- * the application runs perfectly in the preview environment.
+/** * STREAMFLIX PRO - ULTIMATE CONSOLIDATED VERSION
+ * This file handles logic, styling, and rendering in one place.
  */
 
 // --- CONFIGURATION ---
@@ -294,7 +294,7 @@ const MovieModal = ({ movie, onClose, onPlay }) => {
   );
 };
 
-// --- MAIN APP ---
+// --- MAIN APP COMPONENT ---
 
 const App = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -337,11 +337,14 @@ const App = () => {
   return (
     <div className="min-h-screen bg-zinc-950 text-white font-sans selection:bg-red-600/50">
       <style>{`
+        /* FALLBACK STYLES FOR THE LIVE SITE */
         body { 
           background-color: #09090b !important; 
           margin: 0; 
           font-family: 'Inter', -apple-system, sans-serif; 
+          color: white;
         }
+        #root { min-height: 100vh; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -358,11 +361,6 @@ const App = () => {
       <nav className={`fixed top-0 w-full z-[100] transition-all duration-500 px-6 md:px-12 py-5 flex items-center justify-between ${isScrolled ? 'bg-zinc-950 shadow-2xl border-b border-white/5' : 'bg-gradient-to-b from-black/80 to-transparent'}`}>
         <div className="flex items-center gap-12">
           <h1 className="text-red-600 text-3xl md:text-4xl font-black tracking-tighter uppercase cursor-pointer select-none transition-transform active:scale-95">StreamFlix</h1>
-          <ul className="hidden lg:flex items-center gap-8 text-xs font-black text-zinc-400 tracking-[0.2em] uppercase">
-            <li className="text-white hover:text-white cursor-pointer transition-colors">Home</li>
-            <li className="hover:text-white cursor-pointer transition-colors">Movies</li>
-            <li className="hover:text-white cursor-pointer transition-colors">My List</li>
-          </ul>
         </div>
         
         <div className="flex items-center gap-8">
@@ -370,7 +368,7 @@ const App = () => {
             <Search className="w-4 h-4 text-zinc-500 group-focus-within:text-white transition-colors" />
             <input 
               className="bg-transparent border-none outline-none text-sm w-full ml-3 text-white placeholder-zinc-600"
-              placeholder="Search or describe a vibe..."
+              placeholder="Search or ask the AI..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleMagicSearch(searchQuery)}
@@ -386,10 +384,8 @@ const App = () => {
               </button>
             )}
           </div>
-          <div className="flex items-center gap-5">
-            <div className="w-10 h-10 rounded-lg bg-indigo-600 overflow-hidden shadow-xl ring-2 ring-transparent hover:ring-white transition-all cursor-pointer">
-              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" />
-            </div>
+          <div className="w-10 h-10 rounded-lg bg-indigo-600 overflow-hidden shadow-xl ring-2 ring-transparent hover:ring-white transition-all cursor-pointer">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="avatar" />
           </div>
         </div>
       </nav>
@@ -410,12 +406,6 @@ const App = () => {
                     className="flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black hover:bg-zinc-200 transition-all hover:scale-105 active:scale-95 shadow-2xl"
                   >
                     <Play fill="currentColor" size={24} /> Play Now
-                  </button>
-                  <button 
-                    onClick={() => setSelectedMovie(MOVIE_DATABASE[0])}
-                    className="flex items-center gap-4 bg-zinc-800/40 text-white px-12 py-5 rounded-2xl font-black backdrop-blur-2xl border border-white/10 hover:bg-zinc-800/60 transition-all active:scale-95"
-                  >
-                    <Info size={24} /> More Info
                   </button>
                 </div>
               </div>
@@ -441,19 +431,8 @@ const App = () => {
                   <div key={m.id} className="group cursor-pointer space-y-4" onClick={() => setSelectedMovie(m)}>
                     <div className="relative aspect-video rounded-3xl overflow-hidden border border-white/5 shadow-2xl transition-all duration-500 group-hover:scale-105 group-hover:ring-4 ring-red-600/30">
                       <img src={m.thumb} className="w-full h-full object-cover" alt={m.title} />
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
-                        <div className="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center shadow-2xl transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                          <Play fill="currentColor" size={28} />
-                        </div>
-                      </div>
                     </div>
-                    <div className="px-2 space-y-1">
-                      <h4 className="text-white font-black text-xl tracking-tight group-hover:text-red-500 transition-colors">{m.title}</h4>
-                      <div className="flex items-center gap-3 text-zinc-500 text-xs font-bold uppercase tracking-widest">
-                        <span className="text-green-500">{m.rating}</span>
-                        <span>{m.year}</span>
-                      </div>
-                    </div>
+                    <h4 className="text-white font-black text-xl tracking-tight group-hover:text-red-500 transition-colors">{m.title}</h4>
                   </div>
                 ))}
              </div>
@@ -466,5 +445,16 @@ const App = () => {
     </div>
   );
 };
+
+// --- MOUNT THE APP TO THE DOM ---
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  const root = createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
 
 export default App;
